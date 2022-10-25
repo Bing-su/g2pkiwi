@@ -177,9 +177,7 @@ def parse_table():
 
 ############## Preprocessing ##############
 def annotate(string: str) -> str:
-    """attach pos tags to the given string using Mecab
-    mecab: mecab object
-    """
+    """attach pos tags to the given string using Kiwi"""
     norm = normalize("NFD", string)
     tokens = kiwi.tokenize(string)
     replace = []
