@@ -6,9 +6,9 @@
 
 g2p means a task that converts graphemes to phonemes. Hangul, the main script for Korean, is phonetic, but the pronunciation rules are notoriously complicated.
 So it is never easy to learn how to read a text in Korean. That's why g2p is necessary in various nlp tasks like TTS.
-. There's a open source g2p library for Korean, [KoG2P](https://github.com/scarletcho/KoG2P). It is 
+. There's a open source g2p library for Korean, [KoG2P](https://github.com/scarletcho/KoG2P). It is
 simple and works well, but I think we need a better one. Please read through the following section (main features and usage)
-to understand the philosophy of g2pK and how to use g2pK. We know it is not perfect in present. 
+to understand the philosophy of g2pK and how to use g2pK. We know it is not perfect in present.
 That's one of the reasons your contributions are more than welcome.
 
 ## Requirements
@@ -39,7 +39,7 @@ In the following example, note that the first and second 신고 are pronounced d
 ```
 * Returns two types of results, that is, prescriptive (default) and descriptive (with the option `descriptive=True`) pronunciation.
 For example,  josa 의 is pronounced 의 in principle, but in real life, it is often pronounced 에.
-Also, 계 is much more often pronounced 게. 
+Also, 계 is much more often pronounced 게.
 ```
 >>> sent = "나의 친구는 계산이 아주 빠르다"
 >>> g2p(sent)
@@ -67,7 +67,7 @@ For example, in the example below, the vowel ㅒ is normalized to ㅖ.
 >>> g2p(sent, to_syl=False)
 어제는 날씨가 말간는데, 오느른 흐리다.
 ```
-* English words in alphabets are converted into Hangul. 
+* English words in alphabets are converted into Hangul.
 This is possible due to [cmu pronouncing dictionary](http://www.speech.cs.cmu.edu/cgi-bin/cmudict).
 ```
 >>> sent = "그 사람은 좀, old school 같아"
@@ -92,7 +92,7 @@ This is possible due to [cmu pronouncing dictionary](http://www.speech.cs.cmu.ed
 -> 닭장[닥짱], 칡범[칙뻠], 뻗대다[뻗때다], 옷고름[옫꼬름]
 -> 있던[읻떤], 꽂고[꼳꼬], 꽃다발[꼳따발], 낯설다[낟썰다]
 -> 밭갈이[받까리], 솥전[솓쩐], 곱돌[곱똘], 덮개[덥깨]
--> 옆집[엽찝], 넓죽하다[넙쭈카다], 읊조리다[읍쪼리다], 값지다[갑찌다] 
+-> 옆집[엽찝], 넓죽하다[넙쭈카다], 읊조리다[읍쪼리다], 값지다[갑찌다]
 학꾜에 갔다 와서, 엄마가 해 주신 밥을 먹었다. -> 학꾜에 갇따 와서, 엄마가 해 주신 밥을 먹얻따.
  제9항　받침 'ㄲ, ㅋ', 'ㅅ, ㅆ, ㅈ, ㅊ, ㅌ', 'ㅍ'은 어말 또는 자음 앞에서 각각 대표음 [ㄱ, ㄷ, ㅂ]으로 발음한다.
 -> 닦다[닥따], 키읔[키윽], 키읔과[키윽꽈], 옷[옫]
@@ -104,12 +104,12 @@ This is possible due to [cmu pronouncing dictionary](http://www.speech.cs.cmu.ed
 -> 닭장[닥짱], 칡범[칙뻠], 뻗대다[뻗때다], 옷고름[옫꼬름]
 -> 있던[읻떤], 꽂고[꼳꼬], 꽃다발[꼳따발], 낯설다[낟썰다]
 -> 밭갈이[받까리], 솥전[솓쩐], 곱돌[곱똘], 덮개[덥깨]
--> 옆집[엽찝], 넓죽하다[넙쭈카다], 읊조리다[읍쪼리다], 값지다[갑찌다] 
+-> 옆집[엽찝], 넓죽하다[넙쭈카다], 읊조리다[읍쪼리다], 값지다[갑찌다]
 학꾜에 갇따 와서, 엄마가 해 주신 밥을 먹얻따. -> 학꾜에 갇따 와서, 엄마가 해 주신 바블 머걷따.
  제13항　홑받침이나 쌍받침이 모음으로 시작된 조사나 어미, 접미사와 결합되는 경우에는, 제 음가대로 뒤 음절 첫소리로 옮겨 발음한다.
 -> 깎아[까까], 옷이[오시], 있어[이써], 낮이[나지]
 -> 꽂아[꼬자], 꽃을[꼬츨], 쫓아[쪼차], 밭에[바테]
--> 앞으로[아프로], 덮이다[더피다] 
+-> 앞으로[아프로], 덮이다[더피다]
 ```
 
 

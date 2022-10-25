@@ -1,26 +1,40 @@
 # -*- coding: utf-8 -*-
-'''
+"""
 https://github.com/kyubyong/g2pK
-'''
+"""
 
-import os, re
+import os
+import re
 
-import nltk
 import mecab
+import nltk
 from jamo import h2j
 from nltk.corpus import cmudict
 
 # For further info. about cmu dict, consult http://www.speech.cs.cmu.edu/cgi-bin/cmudict.
 try:
-    nltk.data.find('corpora/cmudict.zip')
+    nltk.data.find("corpora/cmudict.zip")
 except LookupError:
-    nltk.download('cmudict')
+    nltk.download("cmudict")
 
-from g2pk.special import jyeo, ye, consonant_ui, josa_ui, vowel_ui, jamo, rieulgiyeok, rieulbieub, verb_nieun, balb, palatalize, modifying_rieul
-from g2pk.regular import link1, link2, link3, link4
-from g2pk.utils import annotate, compose, group, gloss, parse_table, get_rule_id2text
-from g2pk.english import convert_eng
-from g2pk.numerals import convert_num
+from g2pkiwi.english import convert_eng
+from g2pkiwi.numerals import convert_num
+from g2pkiwi.regular import link1, link2, link3, link4
+from g2pkiwi.special import (
+    balb,
+    consonant_ui,
+    jamo,
+    josa_ui,
+    jyeo,
+    modifying_rieul,
+    palatalize,
+    rieulbieub,
+    rieulgiyeok,
+    verb_nieun,
+    vowel_ui,
+    ye,
+)
+from g2pkiwi.utils import annotate, compose, get_rule_id2text, gloss, group, parse_table
 
 
 class G2p(object):
@@ -28,21 +42,23 @@ class G2p(object):
         self.mecab = self.get_mecab()
         self.table = parse_table()
 
-        self.cmu = cmudict.dict() # for English
+        self.cmu = cmudict.dict()  # for English
 
-        self.rule2text = get_rule_id2text() # for comments of main rules
-        self.idioms_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "idioms.txt")
+        self.rule2text = get_rule_id2text()  # for comments of main rules
+        self.idioms_path = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)), "idioms.txt"
+        )
 
     def get_mecab(self):
         try:
             return mecab.MeCab()
         except Exception as e:
             raise Exception(
-                'If you want to install mecab, The command is... pip install python-mecab-ko'
+                "If you want to install mecab, The command is... pip install python-mecab-ko"
             )
 
     def idioms(self, string, descriptive=False, verbose=False):
-        '''Process each line in `idioms.txt`
+        """Process each line in `idioms.txt`
         Each line is delimited by "===",
         and the left string is replaced by the right one.
         inp: input string.
@@ -51,11 +67,11 @@ class G2p(object):
 
         >>> idioms("지금 mp3 파일을 다운받고 있어요")
         지금 엠피쓰리 파일을 다운받고 있어요
-        '''
+        """
         rule = "from idioms.txt"
         out = string
 
-        for line in open(self.idioms_path, 'r', encoding="utf8"):
+        for line in open(self.idioms_path, "r", encoding="utf8"):
             line = line.split("#")[0].strip()
             if "===" in line:
                 str1, str2 = line.split("===")
@@ -64,8 +80,10 @@ class G2p(object):
 
         return out
 
-    def __call__(self, string, descriptive=False, verbose=False, group_vowels=False, to_syl=True):
-        '''Main function
+    def __call__(
+        self, string, descriptive=False, verbose=False, group_vowels=False, to_syl=True
+    ):
+        """Main function
         string: input string
         descriptive: boolean.
         verbose: boolean
@@ -90,7 +108,7 @@ class G2p(object):
 
         STEP 6-9. Hangul
         -> 나의 친구가 엠피쓰리 파일 세개를 다운받꼬 읻따
-        '''
+        """
         # 1. idioms
         string = self.idioms(string, descriptive, verbose)
 
@@ -107,9 +125,20 @@ class G2p(object):
         inp = h2j(string)
 
         # 6. special
-        for func in (jyeo, ye, consonant_ui, josa_ui, vowel_ui, \
-                     jamo, rieulgiyeok, rieulbieub, verb_nieun, \
-                     balb, palatalize, modifying_rieul):
+        for func in (
+            jyeo,
+            ye,
+            consonant_ui,
+            josa_ui,
+            vowel_ui,
+            jamo,
+            rieulgiyeok,
+            rieulbieub,
+            verb_nieun,
+            balb,
+            palatalize,
+            modifying_rieul,
+        ):
             inp = func(inp, descriptive, verbose)
         inp = re.sub("/[PJEB]", "", inp)
 
@@ -118,8 +147,10 @@ class G2p(object):
             _inp = inp
             inp = re.sub(str1, str2, inp)
 
-            if len(rule_ids)>0:
-                rule = "\n".join(self.rule2text.get(rule_id, "") for rule_id in rule_ids)
+            if len(rule_ids) > 0:
+                rule = "\n".join(
+                    self.rule2text.get(rule_id, "") for rule_id in rule_ids
+                )
             else:
                 rule = ""
             gloss(verbose, inp, _inp, rule)
@@ -135,6 +166,7 @@ class G2p(object):
         if to_syl:
             inp = compose(inp)
         return inp
+
 
 if __name__ == "__main__":
     g2p = G2p()

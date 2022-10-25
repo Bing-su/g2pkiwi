@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-'''
+"""
 https://github.com/kyubyong/g2pK
-'''
+"""
 
 import re
 
@@ -10,7 +10,7 @@ BOUND_NOUNS = "군데 권 개 그루 닢 대 두 마리 모 모금 뭇 발 발�
 
 
 def process_num(num, sino=True):
-    '''Process a string looking like arabic number.
+    """Process a string looking like arabic number.
     num: string. Consists of [0-9,]. e.g., 12,345
     sino: boolean. If True, sino-Korean numerals, i.e., 일, 이, .. are considered.
         Otherwise, pure Korean ones in their modifying forms such as 한, 두, ... are returned.
@@ -20,7 +20,7 @@ def process_num(num, sino=True):
 
     >>> process_num("123,456,789", sino=False)
     일억이천삼백사십오만육천칠백여든아홉
-    '''
+    """
     num = re.sub(",", "", num)
 
     if num == "0":
@@ -51,9 +51,9 @@ def process_num(num, sino=True):
                 name = digit2mod.get(digit, "")
             elif i == 1:
                 name = digit2dec.get(digit, "")
-        if digit == '0':
+        if digit == "0":
             if i % 4 == 0:
-                last_three = spelledout[-min(3, len(spelledout)):]
+                last_three = spelledout[-min(3, len(spelledout)) :]
                 if "".join(last_three) == "":
                     spelledout.append("")
                     continue
@@ -100,10 +100,10 @@ def process_num(num, sino=True):
 
 
 def convert_num(string):
-    '''Convert a annotated string such that arabic numerals inside are spelled out.
+    """Convert a annotated string such that arabic numerals inside are spelled out.
     >>> convert_num("우리 3시/B 10분/B에 만나자.")
     우리 세시/B 십분/B에 만나자.
-    '''
+    """
     global BOUND_NOUNS
 
     # Bound Nouns

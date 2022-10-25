@@ -1,0 +1,51 @@
+[project]
+name = "g2pkiwi"
+description = "a fork of g2pK, using kiwipiepy; g2p module for Korean"
+authors = [
+    {name = "dowon", email = "ks2515@naver.com"},
+]
+dependencies = [
+    "jamo",
+    "nltk",
+    "kiwipiepy>=0.14.0",
+]
+requires-python = ">=3.7"
+readme = "README.md"
+license = {text = "Apache-2.0"}
+classifiers=[
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Natural Language :: Korean",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11"
+]
+dynamic = ["version"]
+
+[project.urls]
+repository = "https://github.com/Bing-su/g2pkiwi"
+
+[project.optional-dependencies]
+[build-system]
+requires = ["pdm-pep517>=1.0.0"]
+build-backend = "pdm.pep517.api"
+
+[tool]
+[tool.pdm]
+version = { source = "file", path = "g2pkiwi/__version__.py" }
+
+[tool.pdm.dev-dependencies]
+dev = [
+    "black>=22.10.0",
+    "isort>=5.10.1",
+    "ruff",
+    "pre-commit>=2.20.0",
+]
+
+[tool.isort]
+profile = "black"
