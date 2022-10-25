@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 https://github.com/kyubyong/g2pK
 """
@@ -8,7 +7,7 @@ from g2pkiwi.utils import get_rule_id2text, gloss
 rule_id2text = get_rule_id2text()
 
 
-def link1(inp, descriptive=False, verbose=False):
+def link1(inp: str, descriptive: bool = False, verbose: bool = False) -> str:
     rule = rule_id2text["13"]
     out = inp
 
@@ -35,7 +34,7 @@ def link1(inp, descriptive=False, verbose=False):
     return out
 
 
-def link2(inp, descriptive=False, verbose=False):
+def link2(inp: str, descriptive: bool = False, verbose: bool = False) -> str:
     rule = rule_id2text["14"]
     out = inp
 
@@ -57,7 +56,7 @@ def link2(inp, descriptive=False, verbose=False):
     return out
 
 
-def link3(inp, descriptive=False, verbose=False):
+def link3(inp: str, descriptive: bool = False, verbose: bool = False) -> str:
     rule = rule_id2text["15"]
     out = inp
 
@@ -94,7 +93,7 @@ def link3(inp, descriptive=False, verbose=False):
     return out
 
 
-def link4(inp, descriptive=False, verbose=False):
+def link4(inp: str, descriptive: bool = False, verbose: bool = False) -> str:
     rule = rule_id2text["12.4"]
 
     out = inp
@@ -106,3 +105,9 @@ def link4(inp, descriptive=False, verbose=False):
 
     gloss(verbose, out, inp, rule)
     return out
+
+
+def link_all(inp: str, descriptive: bool = False, verbose: bool = False) -> str:
+    for func in (link1, link2, link3, link4):
+        inp = func(inp, descriptive, verbose)
+    return inp

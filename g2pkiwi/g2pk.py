@@ -13,21 +13,8 @@ except LookupError:
 
 from g2pkiwi.english import convert_eng
 from g2pkiwi.numerals import convert_num
-from g2pkiwi.regular import link1, link2, link3, link4
-from g2pkiwi.special import (
-    balb,
-    consonant_ui,
-    jamo,
-    josa_ui,
-    jyeo,
-    modifying_rieul,
-    palatalize,
-    rieulbieub,
-    rieulgiyeok,
-    verb_nieun,
-    vowel_ui,
-    ye,
-)
+from g2pkiwi.regular import link_all
+from g2pkiwi.special import special_all
 from g2pkiwi.utils import annotate, compose, get_rule_id2text, gloss, group, parse_table
 
 
@@ -54,7 +41,7 @@ class G2p:
         rule = "from idioms.txt"
         out = string
 
-        for line in open(self.idioms_path, "r", encoding="utf8"):
+        for line in open(self.idioms_path, encoding="utf8"):
             line = line.split("#")[0].strip()
             if "===" in line:
                 str1, str2 = line.split("===")
@@ -64,8 +51,13 @@ class G2p:
         return out
 
     def __call__(
-        self, string, descriptive=False, verbose=False, group_vowels=False, to_syl=True
-    ):
+        self,
+        string: str,
+        descriptive: bool = False,
+        verbose: bool = False,
+        group_vowels: bool = False,
+        to_syl: bool = True,
+    ) -> str:
         """Main function
         string: input string
         descriptive: boolean.
@@ -108,22 +100,8 @@ class G2p:
         inp = h2j(string)
 
         # 6. special
-        for func in (
-            jyeo,
-            ye,
-            consonant_ui,
-            josa_ui,
-            vowel_ui,
-            jamo,
-            rieulgiyeok,
-            rieulbieub,
-            verb_nieun,
-            balb,
-            palatalize,
-            modifying_rieul,
-        ):
-            inp = func(inp, descriptive, verbose)
-        inp = re.sub("/[PJEB]", "", inp)
+        inp = special_all(inp, descriptive, verbose)
+        inp = re.sub(r"/[PJEB]", "", inp)
 
         # 7. regular table: batchim + onset
         for str1, str2, rule_ids in self.table:
@@ -139,8 +117,7 @@ class G2p:
             gloss(verbose, inp, _inp, rule)
 
         # 8 link
-        for func in (link1, link2, link3, link4):
-            inp = func(inp, descriptive, verbose)
+        inp = link_all(inp, descriptive, verbose)
 
         # 9. postprocessing
         if group_vowels:

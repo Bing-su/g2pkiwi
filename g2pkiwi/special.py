@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Special rule for processing Hangul
 https://github.com/kyubyong/g2pK
@@ -12,7 +11,7 @@ rule_id2text = get_rule_id2text()
 
 
 ############################ vowels ############################
-def jyeo(inp, descriptive=False, verbose=False):
+def jyeo(inp: str, descriptive: bool = False, verbose: bool = False) -> str:
     rule = rule_id2text["5.1"]
     # 일반적인 규칙으로 취급한다 by kyubyong
 
@@ -21,7 +20,7 @@ def jyeo(inp, descriptive=False, verbose=False):
     return out
 
 
-def ye(inp, descriptive=False, verbose=False):
+def ye(inp: str, descriptive: bool = False, verbose: bool = False) -> str:
     rule = rule_id2text["5.2"]
     # 실제로 언중은 예, 녜, 셰, 쎼 이외의 'ㅖ'는 [ㅔ]로 발음한다. by kyubyong
 
@@ -33,7 +32,7 @@ def ye(inp, descriptive=False, verbose=False):
     return out
 
 
-def consonant_ui(inp, descriptive=False, verbose=False):
+def consonant_ui(inp: str, descriptive: bool = False, verbose: bool = False) -> str:
     rule = rule_id2text["5.3"]
 
     out = re.sub("([ᄀᄁᄂᄃᄄᄅᄆᄇᄈᄉᄊᄌᄍᄎᄏᄐᄑᄒ])ᅴ", r"\1ᅵ", inp)
@@ -41,7 +40,7 @@ def consonant_ui(inp, descriptive=False, verbose=False):
     return out
 
 
-def josa_ui(inp, descriptive=False, verbose=False):
+def josa_ui(inp: str, descriptive: bool = False, verbose: bool = False) -> str:
     rule = rule_id2text["5.4.2"]
     # 실제로 언중은 높은 확률로 조사 '의'는 [ㅔ]로 발음한다.
     if descriptive:
@@ -52,25 +51,25 @@ def josa_ui(inp, descriptive=False, verbose=False):
     return out
 
 
-def vowel_ui(inp, descriptive=False, verbose=False):
+def vowel_ui(inp: str, descriptive: bool = False, verbose: bool = False) -> str:
     rule = rule_id2text["5.4.1"]
     # 실제로 언중은 높은 확률로 단어의 첫음절 이외의 '의'는 [ㅣ]로 발음한다."""
     if descriptive:
-        out = re.sub("(\Sᄋ)ᅴ", r"\1ᅵ", inp)
+        out = re.sub(r"(\Sᄋ)ᅴ", r"\1ᅵ", inp)
     else:
         out = inp
     gloss(verbose, out, inp, rule)
     return out
 
 
-def jamo(inp, descriptive=False, verbose=False):
+def jamo(inp: str, descriptive: bool = False, verbose: bool = False) -> str:
     rule = rule_id2text["16"]
     out = inp
 
-    out = re.sub("([그])ᆮᄋ", r"\1ᄉ", out)
-    out = re.sub("([으])[ᆽᆾᇀᇂ]ᄋ", r"\1ᄉ", out)
-    out = re.sub("([으])[ᆿ]ᄋ", r"\1ᄀ", out)
-    out = re.sub("([으])[ᇁ]ᄋ", r"\1ᄇ", out)
+    out = re.sub(r"(그)ᆮᄋ", r"\1ᄉ", out)
+    out = re.sub(r"(으)[ᆽᆾᇀᇂ]ᄋ", r"\1ᄉ", out)
+    out = re.sub(r"(으)ᆿᄋ", r"\1ᄀ", out)
+    out = re.sub(r"(으)ᇁᄋ", r"\1ᄇ", out)
 
     gloss(verbose, out, inp, rule)
     return out
@@ -78,7 +77,7 @@ def jamo(inp, descriptive=False, verbose=False):
     ############################ 어간 받침 ############################
 
 
-def rieulgiyeok(inp, descriptive=False, verbose=False):
+def rieulgiyeok(inp: str, descriptive: bool = False, verbose: bool = False) -> str:
     rule = rule_id2text["11.1"]
 
     out = inp
@@ -88,7 +87,7 @@ def rieulgiyeok(inp, descriptive=False, verbose=False):
     return out
 
 
-def rieulbieub(inp, descriptive=False, verbose=False):
+def rieulbieub(inp: str, descriptive: bool = False, verbose: bool = False) -> str:
     rule = rule_id2text["25"]
     out = inp
 
@@ -101,7 +100,7 @@ def rieulbieub(inp, descriptive=False, verbose=False):
     return out
 
 
-def verb_nieun(inp, descriptive=False, verbose=False):
+def verb_nieun(inp: str, descriptive: bool = False, verbose: bool = False) -> str:
     rule = rule_id2text["24"]
     out = inp
 
@@ -127,7 +126,7 @@ def verb_nieun(inp, descriptive=False, verbose=False):
     return out
 
 
-def balb(inp, descriptive=False, verbose=False):
+def balb(inp: str, descriptive: bool = False, verbose: bool = False) -> str:
     rule = rule_id2text["10.1"]
     out = inp
     syllable_final_or_consonants = "($|[^ᄋᄒ])"
@@ -139,7 +138,7 @@ def balb(inp, descriptive=False, verbose=False):
     return out
 
 
-def palatalize(inp, descriptive=False, verbose=False):
+def palatalize(inp: str, descriptive: bool = False, verbose: bool = False) -> str:
     rule = rule_id2text["17"]
     out = inp
 
@@ -153,7 +152,7 @@ def palatalize(inp, descriptive=False, verbose=False):
     return out
 
 
-def modifying_rieul(inp, descriptive=False, verbose=False):
+def modifying_rieul(inp: str, descriptive: bool = False, verbose: bool = False) -> str:
     rule = rule_id2text["27"]
     out = inp
 
@@ -177,3 +176,22 @@ def modifying_rieul(inp, descriptive=False, verbose=False):
 
     gloss(verbose, out, inp, rule)
     return out
+
+
+def special_all(inp: str, descriptive: bool = False, verbose: bool = False) -> str:
+    for func in (
+        jyeo,
+        ye,
+        consonant_ui,
+        josa_ui,
+        vowel_ui,
+        jamo,
+        rieulgiyeok,
+        rieulbieub,
+        verb_nieun,
+        balb,
+        palatalize,
+        modifying_rieul,
+    ):
+        inp = func(inp, descriptive, verbose)
+    return inp
