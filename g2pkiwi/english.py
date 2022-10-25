@@ -49,7 +49,8 @@ def convert_eng(string, cmu):
             # 외래어 표기법 https://ko.dict.naver.com/help.nhn?page=4-1-3-1#dtl_cts
             #  1항. 무성 파열음 ([p], [t], [k])
             # 1. 짧은 모음 다음의 어말 무성 파열음([p], [t], [k])은 받침으로 적는다.
-            # 2. 짧은 모음과 유음·비음([l], [r], [m], [n]) 이외의 자음 사이에 오는 무성 파열음([p], [t], [k])은 받침으로 적는다.
+            # 2. 짧은 모음과 유음·비음([l], [r], [m], [n]) 이외의
+            #    자음 사이에 오는 무성 파열음([p], [t], [k])은 받침으로 적는다.
             # 3. 위 경우 이외의 어말과 자음 앞의 [p], [t], [k]는 '으'를 붙여 적는다.
 
             if p in "PTK":
@@ -72,7 +73,8 @@ def convert_eng(string, cmu):
 
             # 3항. 마찰음([s], [z], [f], [v], [θ], [ð], [ʃ], [ʒ])
             # 1. 어말 또는 자음 앞의 [s], [z], [f], [v], [θ], [ð]는 '으'를 붙여 적는다.
-            # 2. 어말의 [ʃ]는 '시'로 적고, 자음 앞의 [ʃ]는 '슈'로, 모음 앞의 [ʃ]는 뒤따르는 모음에 따라 '샤', '섀', '셔', '셰', '쇼', '슈', '시'로 적는다.
+            # 2. 어말의 [ʃ]는 '시'로 적고, 자음 앞의 [ʃ]는 '슈'로, 모음 앞의 [ʃ]는
+            #    뒤따르는 모음에 따라 '샤', '섀', '셔', '셰', '쇼', '슈', '시'로 적는다.
             # 3. 어말 또는 자음 앞의 [ʒ]는 '지'로 적고, 모음 앞의 [ʒ]는 'ㅈ'으로 적는다.
             elif p in ("S", "Z", "F", "V", "TH", "DH", "SH", "ZH"):
                 ret += to_choseong(p)
@@ -154,7 +156,7 @@ def convert_eng(string, cmu):
 
         ret = reconstruct(ret)
         ret = compose(ret)
-        ret = re.sub("[\u1100-\u11FF]", "", ret)  # remove hangul jamo
+        ret = re.sub(r"[\u1100-\u11FF]", "", ret)  # remove hangul jamo
         string = string.replace(eng_word, ret)
     return string
 

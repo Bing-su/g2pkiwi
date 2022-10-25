@@ -22,7 +22,8 @@ def process_num(num: str, sino: bool = True) -> str:
     """Process a string looking like arabic number.
     num: string. Consists of [0-9,]. e.g., 12,345
     sino: boolean. If True, sino-Korean numerals, i.e., 일, 이, .. are considered.
-        Otherwise, pure Korean ones in their modifying forms such as 한, 두, ... are returned.
+        Otherwise, pure Korean ones in their modifying forms
+                   such as 한, 두, ... are returned.
 
     >>> process_num("123,456,789", sino=True)
     일억이천삼백사십오만육천칠백팔십구

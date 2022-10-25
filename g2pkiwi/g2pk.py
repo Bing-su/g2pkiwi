@@ -5,7 +5,8 @@ import nltk
 from jamo import h2j
 from nltk.corpus import cmudict
 
-# For further info. about cmu dict, consult http://www.speech.cs.cmu.edu/cgi-bin/cmudict.
+# For further info. about cmu dict,
+# consult http://www.speech.cs.cmu.edu/cgi-bin/cmudict.
 try:
     nltk.data.find("corpora/cmudict.zip")
 except LookupError:
@@ -62,8 +63,10 @@ class G2p:
         string: input string
         descriptive: boolean.
         verbose: boolean
-        group_vowels: boolean. If True, the vowels of the identical sound are normalized.
-        to_syl: boolean. If True, hangul letters or jamo are assembled to form syllables.
+        group_vowels: boolean.
+            If True, the vowels of the identical sound are normalized.
+        to_syl: boolean.
+            If True, hangul letters or jamo are assembled to form syllables.
 
         For example, given an input string "나의 친구가 mp3 file 3개를 다운받고 있다",
         STEP 1. idioms

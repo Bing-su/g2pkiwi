@@ -132,8 +132,8 @@ def balb(inp: str, descriptive: bool = False, verbose: bool = False) -> str:
     syllable_final_or_consonants = "($|[^ᄋᄒ])"
 
     # exceptions
-    out = re.sub(f"(바)ᆲ({syllable_final_or_consonants})", r"\1ᆸ\2", out)
-    out = re.sub(f"(너)ᆲ([ᄌᄍ]ᅮ|[ᄃᄄ]ᅮ)", r"\1ᆸ\2", out)
+    out = re.sub(rf"(바)ᆲ({syllable_final_or_consonants})", r"\1ᆸ\2", out)
+    out = re.sub(r"(너)ᆲ([ᄌᄍ]ᅮ|[ᄃᄄ]ᅮ)", r"\1ᆸ\2", out)
     gloss(verbose, out, inp, rule)
     return out
 
