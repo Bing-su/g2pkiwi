@@ -2,8 +2,9 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
+from unicodedata import normalize
 
-from jamo import h2j, j2h
+from jamo import j2h
 from kiwipiepy import Kiwi
 
 kiwi = Kiwi(model_type="sbg")
@@ -179,39 +180,34 @@ def annotate(string: str) -> str:
     """attach pos tags to the given string using Mecab
     mecab: mecab object
     """
+    norm = normalize("NFD", string)
     tokens = kiwi.tokenize(string)
-    if string.replace(" ", "") != "".join(token.form for token in tokens):
-        return string
-    blanks = [i for i, char in enumerate(string) if char == " "]
+    replace = []
 
-    tag_seq = []
+    idx = 0
     for token in tokens:
-        tag = token.tag
-        if tag == "NNB":  # bound noun
-            tag = "B"
-        else:
-            tag = tag[0]
-        tag_seq.append("_" * (len(token) - 1) + tag)
-    tag_seq = "".join(tag_seq)
+        form, tag = token.form, token.tag
+        dec = normalize("NFD", form)
+        if form == "의" and tag[0] == "J":
+            replace.append((dec, dec + "/J", idx))
+        elif tag[0] == "E" and dec[-1] == "ᆯ":
+            replace.append((dec, dec + "/E", idx))
+        elif tag[0] == "V" and dec[-1] in "ᆫᆬᆷᆱᆰᆲᆴ":
+            replace.append((dec, dec + "/P", idx))
+        elif tag == "NNB":
+            replace.append((dec, dec + "/B", idx))
+        idx += len(dec)
 
-    for i in blanks:
-        tag_seq = tag_seq[:i] + " " + tag_seq[i:]
+    acc = 0
+    for orig, repl, idx in replace:
+        nxt = norm[: idx + acc] + norm[idx + acc :].replace(orig, repl, 1)
+        if norm != nxt:
+            acc += 2
+        norm = nxt
 
-    annotated = ""
-    for char, tag in zip(string, tag_seq):
-        annotated += char
-        if char == "의" and tag == "J":
-            annotated += "/J"
-        elif tag == "E":
-            if h2j(char)[-1] in "ᆯ":
-                annotated += "/E"
-        elif tag == "V":
-            if h2j(char)[-1] in "ᆫᆬᆷᆱᆰᆲᆴ":
-                annotated += "/P"
-        elif tag == "B":  # bound noun
-            annotated += "/B"
+    result = normalize("NFC", norm)
 
-    return annotated
+    return result
 
 
 ############## Postprocessing ##############
