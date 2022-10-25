@@ -2,6 +2,9 @@ import os
 import re
 
 from jamo import h2j, j2h
+from kiwipiepy import Kiwi
+
+kiwi = Kiwi(model_type="sbg")
 
 
 ############## English ##############
@@ -177,19 +180,19 @@ def parse_table():
 
 
 ############## Preprocessing ##############
-def annotate(string, mecab):
+def annotate(string):
     """attach pos tags to the given string using Mecab
     mecab: mecab object
     """
-    tokens = mecab.pos(string)
-    if string.replace(" ", "") != "".join(token for token, _ in tokens):
+    tokens = kiwi.tokenize(string)
+    if string.replace(" ", "") != "".join(token.form for token in tokens):
         return string
     blanks = [i for i, char in enumerate(string) if char == " "]
 
     tag_seq = []
-    for token, tag in tokens:
-        tag = tag.split("+")[-1]
-        if tag == "NNBC":  # bound noun
+    for token in tokens:
+        tag = token.tag
+        if tag == "NNB":  # bound noun
             tag = "B"
         else:
             tag = tag[0]

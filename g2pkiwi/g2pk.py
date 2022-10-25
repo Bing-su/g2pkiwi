@@ -5,8 +5,8 @@ https://github.com/kyubyong/g2pK
 
 import os
 import re
+from pathlib import Path
 
-import mecab
 import nltk
 from jamo import h2j
 from nltk.corpus import cmudict
@@ -39,7 +39,6 @@ from g2pkiwi.utils import annotate, compose, get_rule_id2text, gloss, group, par
 
 class G2p(object):
     def __init__(self):
-        self.mecab = self.get_mecab()
         self.table = parse_table()
 
         self.cmu = cmudict.dict()  # for English
@@ -116,7 +115,7 @@ class G2p(object):
         string = convert_eng(string, self.cmu)
 
         # 3. annotate
-        string = annotate(string, self.mecab)
+        string = annotate(string)
 
         # 4. Spell out arabic numbers
         string = convert_num(string)
