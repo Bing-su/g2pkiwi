@@ -1,5 +1,7 @@
-import os
+from __future__ import annotations
+
 import re
+from pathlib import Path
 
 from jamo import h2j, j2h
 from kiwipiepy import Kiwi
@@ -8,10 +10,10 @@ kiwi = Kiwi(model_type="sbg")
 
 
 ############## English ##############
-def adjust(arpabets):
+def adjust(arpabets: list[str]) -> list[str]:
     """Modify arpabets so that it fits our processes"""
     string = " " + " ".join(arpabets) + " $"
-    string = re.sub("\d", "", string)
+    string = re.sub(r"\d", "", string)
     string = string.replace(" T S ", " TS ")
     string = string.replace(" D Z ", " DZ ")
     string = string.replace(" AW ER ", " AWER ")
@@ -22,7 +24,7 @@ def adjust(arpabets):
     return string.strip("$ ").split()
 
 
-def to_choseong(arpabet):
+def to_choseong(arpabet: str) -> str:
     """Arpabet to choseong or onset"""
     d = {
         "B": "ᄇ",
@@ -56,7 +58,7 @@ def to_choseong(arpabet):
     return d.get(arpabet, arpabet)
 
 
-def to_jungseong(arpabet):
+def to_jungseong(arpabet: str) -> str:
     """Arpabet to jungseong or vowel"""
     d = {
         "AA": "ᅡ",
@@ -79,7 +81,7 @@ def to_jungseong(arpabet):
     return d.get(arpabet, arpabet)
 
 
-def to_jongseong(arpabet):
+def to_jongseong(arpabet: str) -> str:
     """Arpabet to jongseong or coda"""
     d = {
         "B": "ᆸ",
@@ -111,7 +113,7 @@ def to_jongseong(arpabet):
     return d.get(arpabet, arpabet)
 
 
-def reconstruct(string):
+def reconstruct(string: str) -> str:
     """Some postprocessing rules"""
     pairs = [
         ("그W", "ᄀW"),
@@ -146,15 +148,8 @@ def reconstruct(string):
 ############## Hangul ##############
 def parse_table():
     """Parse the main rule table"""
-    lines = (
-        open(
-            os.path.dirname(os.path.abspath(__file__)) + "/table.csv",
-            "r",
-            encoding="utf8",
-        )
-        .read()
-        .splitlines()
-    )
+    table_path = Path(__file__).parent / "table.csv"
+    lines = table_path.read_text("utf-8").splitlines()
     onsets = lines[0].split(",")
     table = []
     for line in lines[1:]:
@@ -180,7 +175,7 @@ def parse_table():
 
 
 ############## Preprocessing ##############
-def annotate(string):
+def annotate(string: str) -> str:
     """attach pos tags to the given string using Mecab
     mecab: mecab object
     """
@@ -220,25 +215,25 @@ def annotate(string):
 
 
 ############## Postprocessing ##############
-def compose(letters):
+def compose(letters: str) -> str:
     # insert placeholder
-    letters = re.sub("(^|[^\u1100-\u1112])([\u1161-\u1175])", r"\1ᄋ\2", letters)
+    letters = re.sub(r"(^|[^\u1100-\u1112])([\u1161-\u1175])", r"\1ᄋ\2", letters)
 
     string = letters  # assembled characters
     # c+v+c
-    syls = set(re.findall("[\u1100-\u1112][\u1161-\u1175][\u11A8-\u11C2]", string))
+    syls = set(re.findall(r"[\u1100-\u1112][\u1161-\u1175][\u11A8-\u11C2]", string))
     for syl in syls:
         string = string.replace(syl, j2h(*syl))
 
     # c+v
-    syls = set(re.findall("[\u1100-\u1112][\u1161-\u1175]", string))
+    syls = set(re.findall(r"[\u1100-\u1112][\u1161-\u1175]", string))
     for syl in syls:
         string = string.replace(syl, j2h(*syl))
 
     return string
 
 
-def group(inp):
+def group(inp: str) -> str:
     """For group_vowels=True
     Contemporarily, Korean speakers don't distinguish some vowels.
     """
@@ -250,13 +245,14 @@ def group(inp):
     return inp
 
 
-def _get_examples():
+def _get_examples() -> list[str]:
     """For internal use"""
-    text = open("rules.txt", "r", encoding="utf8").read().splitlines()
+    rules_path = Path(__file__).parent / "rules.txt"
+    text = rules_path.read_text(encoding="utf-8").splitlines()
     examples = []
     for line in text:
         if line.startswith("->"):
-            examples.extend(re.findall("([ㄱ-힣][ ㄱ-힣]*)\[([ㄱ-힣][ ㄱ-힣]*)]", line))
+            examples.extend(re.findall(r"([ㄱ-힣][ ㄱ-힣]*)\[([ㄱ-힣][ ㄱ-힣]*)\]", line))
     _examples = []
     for inp, gt in examples:
         for each in gt.split("/"):
@@ -266,27 +262,20 @@ def _get_examples():
 
 
 ############## Utilities ##############
-def get_rule_id2text():
+def get_rule_id2text() -> dict[str, str]:
     """for verbose=True"""
-    rules = (
-        open(
-            os.path.dirname(os.path.abspath(__file__)) + "/rules.txt",
-            "r",
-            encoding="utf8",
-        )
-        .read()
-        .strip()
-        .split("\n\n")
-    )
-    rule_id2text = dict()
+    rules_path = Path(__file__).parent / "rules.txt"
+    rules = rules_path.read_text("utf-8").strip().split("\n\n")
+
+    rule_id2text: dict[str, str] = {}
     for rule in rules:
-        rule_id, texts = rule.splitlines()[0], rule.splitlines()[1:]
-        rule_id2text[rule_id.strip()] = "\n".join(texts)
+        rule_id, texts = rule.split("\n", maxsplit=1)
+        rule_id2text[rule_id.strip()] = texts.strip()
     return rule_id2text
 
 
-def gloss(verbose, out, inp, rule):
+def gloss(verbose: bool, out: str, inp: str, rule: str):
     """displays the process and relevant information"""
-    if verbose and out != inp and out != re.sub("/[EJPB]", "", inp):
+    if verbose and out != inp and out != re.sub(r"/[EJPB]", "", inp):
         print(compose(inp), "->", compose(out))
         print("\033[1;31m", rule, "\033[0m")

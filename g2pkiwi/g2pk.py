@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-https://github.com/kyubyong/g2pK
-"""
-
-import os
 import re
 from pathlib import Path
 
@@ -37,24 +31,14 @@ from g2pkiwi.special import (
 from g2pkiwi.utils import annotate, compose, get_rule_id2text, gloss, group, parse_table
 
 
-class G2p(object):
+class G2p:
     def __init__(self):
         self.table = parse_table()
 
         self.cmu = cmudict.dict()  # for English
 
         self.rule2text = get_rule_id2text()  # for comments of main rules
-        self.idioms_path = os.path.join(
-            os.path.dirname(os.path.abspath(__file__)), "idioms.txt"
-        )
-
-    def get_mecab(self):
-        try:
-            return mecab.MeCab()
-        except Exception as e:
-            raise Exception(
-                "If you want to install mecab, The command is... pip install python-mecab-ko"
-            )
+        self.idioms_path = Path(__file__).parent / "idioms.txt"
 
     def idioms(self, string, descriptive=False, verbose=False):
         """Process each line in `idioms.txt`
