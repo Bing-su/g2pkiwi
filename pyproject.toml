@@ -30,7 +30,11 @@ dynamic = ["version"]
 [project.urls]
 repository = "https://github.com/Bing-su/g2pkiwi"
 
+[project.scripts]
+g2pkiwi = "g2pkiwi.__main__:cli"
+
 [project.optional-dependencies]
+
 [build-system]
 requires = ["pdm-pep517>=1.0.0"]
 build-backend = "pdm.pep517.api"
