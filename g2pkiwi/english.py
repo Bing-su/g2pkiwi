@@ -23,7 +23,9 @@ def convert_eng(string, cmu):
     >>> convert_eng("그 사람 좀 old school이야", cmu)
     그 사람 좀 올드 스쿨이야
     """
-    eng_words = set(re.findall(r"[a-z][a-z']*[a-z]|[a-z]", string, flags=re.I))
+    words_set = set(re.findall(r"[a-z][a-z']*[a-z]|[a-z]", string, flags=re.I))
+    # 길이가 긴 영어단어부터 처리해야 .replace에서 오작동을 방지함.
+    eng_words = sorted(words_set, key=len, reverse=True)
     for eng_word in eng_words:
         word = eng_word.lower()
         if word not in cmu:
