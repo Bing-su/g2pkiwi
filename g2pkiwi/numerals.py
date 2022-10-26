@@ -133,7 +133,9 @@ def convert_num(string):
 
     # remain digits
     try:
-        string = re.sub(r"\d[\d,]*\d", lambda m: process_num(m.group(), sino=True), string)
+        string = re.sub(
+            r"\d[\d,]*\d", lambda m: process_num(m.group(), sino=True), string
+        )
     except ValueError:
         pass
 

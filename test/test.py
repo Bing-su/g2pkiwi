@@ -4,7 +4,6 @@ from pathlib import Path
 
 from g2pkiwi import G2p
 
-
 g2p = G2p()
 
 
