@@ -10,9 +10,18 @@ def cli():
     parser.add_argument("text", help="input string", type=str, nargs="+")
     parser.add_argument("-v", "--verbose", help="verbose", action="store_true")
     parser.add_argument("-d", "--descriptive", help="descriptive", action="store_true")
+    parser.add_argument(
+        "-g", "--group_vowels", help="group_vowels", action="store_true"
+    )
     args = parser.parse_args()
     string = " ".join(args.text)
-    print(g2p(string, descriptive=args.descriptive, verbose=args.verbose))
+    result = g2p(
+        string,
+        descriptive=args.descriptive,
+        verbose=args.verbose,
+        group_vowels=args.group_vowels,
+    )
+    print(result)
 
 
 if __name__ == "__main__":
