@@ -132,7 +132,10 @@ def convert_num(string):
         string = string.replace(f"{num}{bn}/B", f"{spelledout}{bn}/B")
 
     # remain digits
-    string = re.sub(r"\d[\d,]*\d", lambda m: process_num(m.group(), sino=True), string)
+    try:
+        string = re.sub(r"\d[\d,]*\d", lambda m: process_num(m.group(), sino=True), string)
+    except ValueError:
+        pass
 
     # digit by digit for still remaining digits
     digits = "0123456789"
