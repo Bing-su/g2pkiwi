@@ -43,6 +43,10 @@ build-backend = "pdm.pep517.api"
 [tool.pdm]
 version = { source = "file", path = "g2pkiwi/__version__.py" }
 
+[tool.pdm.scripts]
+format = "pre-commit run -a"
+test = "python test/test.py"
+
 [tool.pdm.dev-dependencies]
 dev = [
     "black>=22.10.0",
