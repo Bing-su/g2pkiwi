@@ -42,11 +42,12 @@ class G2p:
         rule = "from idioms.txt"
         out = string
 
-        for line in open(self.idioms_path, encoding="utf8"):
-            line = line.split("#")[0].strip()
-            if "===" in line:
-                str1, str2 = line.split("===")
-                out = re.sub(str1, str2, out)
+        with self.idioms_path.open(encoding="utf-8") as file:
+            for line in file:
+                line = line.split("#")[0].strip()
+                if "===" in line:
+                    str1, str2 = line.split("===")
+                    out = re.sub(str1, str2, out)
         gloss(verbose, out, string, rule)
 
         return out
