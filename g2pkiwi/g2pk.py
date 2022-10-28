@@ -13,6 +13,7 @@ except LookupError:
     nltk.download("cmudict")
 
 from g2pkiwi.english import convert_eng
+from g2pkiwi.idioms import idioms
 from g2pkiwi.numerals import convert_num
 from g2pkiwi.regular import link_all
 from g2pkiwi.special import special_all
@@ -27,30 +28,6 @@ class G2p:
 
         self.rule2text = get_rule_id2text()  # for comments of main rules
         self.idioms_path = Path(__file__).parent / "idioms.txt"
-
-    def idioms(self, string, descriptive=False, verbose=False):
-        """Process each line in `idioms.txt`
-        Each line is delimited by "===",
-        and the left string is replaced by the right one.
-        inp: input string.
-        descriptive: not used.
-        verbose: boolean.
-
-        >>> idioms("지금 mp3 파일을 다운받고 있어요")
-        지금 엠피쓰리 파일을 다운받고 있어요
-        """
-        rule = "from idioms.txt"
-        out = string
-
-        with self.idioms_path.open(encoding="utf-8") as file:
-            for line in file:
-                line = line.split("#")[0].strip()
-                if "===" in line:
-                    str1, str2 = line.split("===")
-                    out = re.sub(str1, str2, out)
-        gloss(verbose, out, string, rule)
-
-        return out
 
     def __call__(
         self,
@@ -89,7 +66,7 @@ class G2p:
         -> 나의 친구가 엠피쓰리 파일 세개를 다운받꼬 읻따
         """
         # 1. idioms
-        string = self.idioms(string, descriptive, verbose)
+        string = idioms(string, descriptive, verbose)
 
         # 2 English to Hangul
         string = convert_eng(string, self.cmu)
@@ -129,6 +106,8 @@ class G2p:
 
         if to_syl:
             inp = compose(inp)
+
+        inp = inp.replace("‖", "")
         return inp
 
 
