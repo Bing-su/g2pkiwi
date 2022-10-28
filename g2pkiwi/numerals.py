@@ -5,8 +5,9 @@ import re
 
 # This is a list of bound nouns preceded by pure Korean numerals.
 BOUND_NOUNS = (
-    "군데 권 개 그루 닢 대 두 마리 모 모금 뭇 발 발짝 방 번 벌 보루 살 수 술 시 시간 쌈 움큼 정 짝 채 척 첩 축 켤레 톨 통"
+    "군데 권 개 그루 닢 대 두 마리 명 모 모금 뭇 발 발짝 방 번 벌 보루 살 수 술 시 시간 쌈 움큼 정 짝 채 척 첩 축 켤레 톨 통"
 )
+BOUND_NOUNS = BOUND_NOUNS.split()
 
 digits = "123456789"
 names = "일이삼사오육칠팔구"
@@ -109,7 +110,8 @@ def process_num(num: str, sino: bool = True) -> str:
         if name is not None:
             spelledout.append(name)
         else:
-            raise ValueError(f"digit is too long: {num}")
+            # too long digit
+            return num
 
     return "".join(elem for elem in spelledout)
 
@@ -122,28 +124,35 @@ def convert_num(string):
     global BOUND_NOUNS
 
     # Bound Nouns
-    tokens = set(re.findall(r"([\d][\d,]*)([ㄱ-힣]+)/B", string))
+    tokens = set(re.findall(r"(\d[\d,]*\d|\d)(\s*[ㄱ-힣]+(?=/B))", string))
+    tokens = sorted(tokens, key=len, reverse=True)
     for token in tokens:
         num, bn = token
-        if bn in BOUND_NOUNS:
+        bn_s = bn.lstrip()
+        if bn_s in BOUND_NOUNS:
             spelledout = process_num(num, sino=False)
         else:
             spelledout = process_num(num, sino=True)
+
         string = string.replace(f"{num}{bn}/B", f"{spelledout}{bn}/B")
 
     # remain digits
-    try:
-        string = re.sub(
-            r"\d[\d,]*\d", lambda m: process_num(m.group(), sino=True), string
-        )
-    except ValueError:
-        pass
+    remain = set(re.findall(r"(\d[\d,]*\d|\d)", string))
+    remain = sorted(remain, key=len, reverse=True)
+    for num in remain:
+        string = string.replace(num, process_num(num, sino=True))
 
     # digit by digit for still remaining digits
     digits = "0123456789"
     names = "영일이삼사오육칠팔구"
     for d, n in zip(digits, names):
         string = string.replace(d, n)
+
+    # special cases
+    pairs = [("십육", "심뉵"), ("백육", "뱅뉵")]
+
+    for str1, str2 in pairs:
+        string = string.replace(str1, str2)
 
     return string
 
