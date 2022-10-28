@@ -7,7 +7,7 @@ g2p = G2p()
 
 def cli():
     parser = argparse.ArgumentParser()
-    parser.add_argument("text", help="input string", type=str, nargs="+")
+    parser.add_argument("text", help="input sentence", type=str, nargs="+")
     parser.add_argument("-v", "--verbose", help="verbose", action="store_true")
     parser.add_argument("-d", "--descriptive", help="descriptive", action="store_true")
     parser.add_argument(
