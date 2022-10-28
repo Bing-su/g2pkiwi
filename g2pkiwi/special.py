@@ -55,7 +55,7 @@ def vowel_ui(inp: str, descriptive: bool = False, verbose: bool = False) -> str:
     rule = rule_id2text["5.4.1"]
     # 실제로 언중은 높은 확률로 단어의 첫음절 이외의 '의'는 [ㅣ]로 발음한다."""
     if descriptive:
-        out = re.sub(r"(\Sᄋ)ᅴ", r"\1ᅵ", inp)
+        out = re.sub(r"([^\s‖]ᄋ)ᅴ", r"\1ᅵ", inp)
     else:
         out = inp
     gloss(verbose, out, inp, rule)

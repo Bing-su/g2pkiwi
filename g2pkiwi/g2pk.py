@@ -27,7 +27,6 @@ class G2p:
         self.cmu = cmudict.dict()  # for English
 
         self.rule2text = get_rule_id2text()  # for comments of main rules
-        self.idioms_path = Path(__file__).parent / "idioms.txt"
 
     def __call__(
         self,
