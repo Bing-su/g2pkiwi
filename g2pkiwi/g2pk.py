@@ -1,16 +1,6 @@
 import re
-from pathlib import Path
 
-import nltk
 from jamo import h2j
-from nltk.corpus import cmudict
-
-# For further info. about cmu dict,
-# consult http://www.speech.cs.cmu.edu/cgi-bin/cmudict.
-try:
-    nltk.data.find("corpora/cmudict.zip")
-except LookupError:
-    nltk.download("cmudict")
 
 from g2pkiwi.english import convert_eng
 from g2pkiwi.idioms import idioms
@@ -23,8 +13,6 @@ from g2pkiwi.utils import annotate, compose, get_rule_id2text, gloss, group, par
 class G2p:
     def __init__(self):
         self.table = parse_table()
-
-        self.cmu = cmudict.dict()  # for English
 
         self.rule2text = get_rule_id2text()  # for comments of main rules
 
@@ -68,7 +56,7 @@ class G2p:
         string = idioms(string, descriptive, verbose)
 
         # 2 English to Hangul
-        string = convert_eng(string, self.cmu)
+        string = convert_eng(string)
 
         # 3. annotate
         string = annotate(string)

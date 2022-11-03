@@ -5,6 +5,16 @@ https://github.com/kyubyong/g2pK
 
 import re
 
+import nltk
+from nltk.corpus import cmudict
+
+# For further info. about cmu dict,
+# consult http://www.speech.cs.cmu.edu/cgi-bin/cmudict.
+try:
+    nltk.data.find("corpora/cmudict.zip")
+except LookupError:
+    nltk.download("cmudict")
+
 from g2pkiwi.utils import (
     adjust,
     compose,
@@ -14,8 +24,10 @@ from g2pkiwi.utils import (
     to_jungseong,
 )
 
+cmu = cmudict.dict()
 
-def convert_eng(string, cmu):
+
+def convert_eng(string: str) -> str:
     """Convert a string such that English words inside are turned into Hangul.
     string: input string.
     cmu: cmu dict object.
@@ -164,5 +176,4 @@ def convert_eng(string, cmu):
 if __name__ == "__main__":
     from nltk.corpus import cmudict
 
-    cmu = cmudict.dict()
-    print(convert_eng("오늘 학교에서 밥을 먹고 집에 와서 game을 했다", cmu))
+    print(convert_eng("오늘 학교에서 밥을 먹고 집에 와서 game을 했다"))
