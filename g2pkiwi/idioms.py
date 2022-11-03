@@ -13,7 +13,7 @@ with idioms_file.open(encoding="utf-8") as file:
             idioms_dict[str1] = str2
 
 idioms_keys = sorted(idioms_dict.keys(), key=len, reverse=True)
-pattern = re.compile("|".join(re.escape(k) for k in idioms_dict.keys()))
+pattern = re.compile("|".join(idioms_dict.keys()))
 
 
 def idioms(inp: str, descriptive: bool = False, verbose: bool = False) -> str:
